@@ -44,4 +44,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get the note that has the category.
+     */
+    public function notes()
+    {
+        return $this->hasMany(Note::class);
+    }
 }
