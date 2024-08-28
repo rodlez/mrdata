@@ -14,8 +14,8 @@ class CatPagination extends Component
     use WithPagination;
 
     //protected $paginationTheme = "bootstrap";
-    public $orderColumn = "name";
-    public $sortOrder = "asc";
+    public $orderColumn = "id";
+    public $sortOrder = "desc";
     public $sortLink = '<i class="sorticon fa-solid fa-caret-up"></i>';
     public $search = "";
     // test

@@ -34,17 +34,33 @@
             <!-- Page Content -->           
             <main>            
                 <!-- Session to pass the message for the CRUD operations -->
+                @if(session()->has('message'))
+                <div class="success-message">                
+                    {{ session('message') }}
+                    <a href="/category">X</a>
+                </div>
+                @endif
+                
+                
+                
+                {{--
+                <!-- Session to pass the message for the CRUD operations -->
                 @session('message')
                 <div class="success-message">
                     {{ session('message') }}
                 </div>
                 @endsession
+
+                --}}
+
                 <!-- To output variables in blade, use slot --> 
-                <div class="bg-red-50">
+                
                     {{ $slot }}
-                </div>
+                
             </main>
         </div>
         @livewireScripts
+        <!-- TEST JS -->
+        @stack('other-scripts')
     </body>
 </html>

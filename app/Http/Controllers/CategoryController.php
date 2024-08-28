@@ -37,14 +37,14 @@ class CategoryController extends Controller
     {
         //dd($request);
         $data = $request->validate([
-            'name' => ['required', 'string', 'unique:categories,name']
+            'name' => ['required', 'min:3', 'string', 'unique:categories,name']
         ]);
         //dd($data);
         //$data['user_id'] = $request->user()->id;
         $category = Category::create($data);
         //dd($category);
 
-        return to_route('category.show', $category)->with('message', 'Category was created.');
+        return to_route('category.index', $category)->with('message', 'Category (' . $category->name . ') created.');
     }
 
     /**
@@ -84,14 +84,14 @@ class CategoryController extends Controller
         }*/
 
         $data = $request->validate([
-            'name' => ['required', 'string', 'unique:categories,name,{$this->category->id}']
+            'name' => ['required', 'min:3', 'string', 'unique:categories,name,{$this->category->id}']
         ]);
 
         //$data['updated_at'] = date('Y-m-d H:i:s');
 
         $category->update($data);
 
-        return to_route('category.show', $category)->with('message', 'category was updated.');
+        return to_route('category.show', $category)->with('message', 'Category Updated.');
     }
 
     /**

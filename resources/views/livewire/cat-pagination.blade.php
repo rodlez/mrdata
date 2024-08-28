@@ -12,6 +12,8 @@
     <div class="flex flex-col">
         <div class=" overflow-x-auto">
           <div class="min-w-full inline-block align-middle">
+                
+                <!-- Search -->
                 <div class="relative text-gray-500 focus-within:text-gray-900 mb-4">
                     <div class="absolute inset-y-0 left-1 flex items-center pl-3 pointer-events-none ">
                         <svg class="w-5 h-5" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -23,10 +25,22 @@
                     <!-- Search box -->
                     <input type="search" class="my-6 block w-80 h-11 pr-5 pl-12 py-2.5 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none" placeholder="Search by name" style="width: 250px;" wire:model.live="search">
                 </div>
-                    <!-- Search Results -->                
-                    {{ ($found > 0) ? 'Found -> ' . $found . ' categories.': '' }}
+                    
 
-                <a href="{{ route('category.create') }}">Create Category</a>
+                    <div class="flex p-4 justify-between">
+
+                        <div>
+                            <!-- Search Results -->                
+                            <p class="text-green-600">{{ ($found > 0) ? $found . ' categories found with name ['.$search.']': '' }}</p>
+                        </div>
+
+                        <!-- New Category -->
+                        <div>
+                            <a href="{{ route('category.create') }}" class="text-white bg-green-600 hover:bg-green-500 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">New Category</a>
+                        </div>
+
+                    </div>    
+
                 <div class="overflow-hidden ">
                     <table class="min-w-full rounded-xl">
                       <thead>
