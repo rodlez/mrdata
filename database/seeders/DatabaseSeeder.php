@@ -8,6 +8,7 @@ use Illuminate\Database\Seeder;
 // Models
 use App\Models\User;
 use App\Models\Category;
+use App\Models\Tag;
 
 class DatabaseSeeder extends Seeder
 {
@@ -23,6 +24,8 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);*/
 
-        Category::factory(100)->create();
+        //Category::factory(100)->create();
+
+        Tag::factory(100)->create();
     }
 }

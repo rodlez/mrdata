@@ -11,6 +11,7 @@
      </div>
      @endsession
      --}}       
+    
 
  <livewire:cat-pagination />
     

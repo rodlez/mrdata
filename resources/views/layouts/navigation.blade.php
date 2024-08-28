@@ -11,14 +11,28 @@
                 </div>
 
                 <!-- Navigation Links -->
+                <!-- Home -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
+                <!-- Notes -->
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('note.index')" :active="request()->routeIs('note.index')">
+                        {{ __('Notes') }}
+                    </x-nav-link>
+                </div>
+                <!-- Categories -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('category.index')" :active="request()->routeIs('category.index')">
                         {{ __('Categories') }}
+                    </x-nav-link>
+                </div>
+                <!-- Tags -->
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('tag.index')" :active="request()->routeIs('tag.index')">
+                        {{ __('Tags') }}
                     </x-nav-link>
                 </div>
             </div>

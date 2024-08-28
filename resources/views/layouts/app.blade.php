@@ -33,14 +33,14 @@
 
             <!-- Page Content -->           
             <main>            
-                <!-- Session to pass the message for the CRUD operations -->
+                
+               <!-- Session to pass the message for the CRUD operations -->
                 @if(session()->has('message'))
                 <div class="success-message">                
                     {{ session('message') }}
-                    <a href="/category">X</a>
+                    <a href="{{URL::current()}}">X</a>
                 </div>
                 @endif
-                
                 
                 
                 {{--
