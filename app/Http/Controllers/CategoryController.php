@@ -16,8 +16,8 @@ class CategoryController extends Controller
 
         $categories = Category::query()
             //->where('user_id', request()->user()->id)
-            ->orderBy('created_at', 'desc')
-            ->paginate(50);
+            ->orderBy('id', 'desc')
+            ->paginate(10);
         //dd($categories);
         return view('category.index', ['categories' => $categories]);
     }
@@ -86,6 +86,8 @@ class CategoryController extends Controller
         $data = $request->validate([
             'name' => ['required', 'string', 'unique:categories,name,{$this->category->id}']
         ]);
+
+        //$data['updated_at'] = date('Y-m-d H:i:s');
 
         $category->update($data);
 

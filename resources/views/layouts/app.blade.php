@@ -7,13 +7,17 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <!-- Fontawesome --> 
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/fontawesome.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/solid.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/brands.css') }}">
 
+        @livewireStyles
         <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
+        @vite(['resources/css/app.css', 'resources/js/app.js'])        
+        
+    </head>   
+
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
             @include('layouts.navigation')
@@ -28,8 +32,7 @@
             @endisset
 
             <!-- Page Content -->           
-            <main>
-            
+            <main>            
                 <!-- Session to pass the message for the CRUD operations -->
                 @session('message')
                 <div class="success-message">
@@ -37,9 +40,11 @@
                 </div>
                 @endsession
                 <!-- To output variables in blade, use slot --> 
+                <div class="bg-red-50">
                     {{ $slot }}
-                
-                </main>
+                </div>
+            </main>
         </div>
+        @livewireScripts
     </body>
 </html>

@@ -11,7 +11,7 @@
             </ul>
         </div>
         @endif
-        <form action="{{ route('category.update', $category->id) }}" method="POST" class="note">
+        <form action="{{ route('category.update', $category) }}" method="POST" class="note">
             <!-- Add Token to prevent Cross-Site Request Forgery (CSRF) -->
             @csrf
             <!-- Dirtective to Override the http method -->
