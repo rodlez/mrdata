@@ -12,7 +12,7 @@ class NotePagination extends Component
     use WithPagination;
 
     //protected $paginationTheme = "bootstrap";
-    public $orderColumn = "id";
+    public $orderColumn = "notes.id";
     public $sortOrder = "desc";
     public $sortLink = '<i class="sorticon fa-solid fa-caret-up"></i>';
     public $search = "";
@@ -42,7 +42,21 @@ class NotePagination extends Component
     {
         $found = 0;
 
-        $notes = Note::orderby($this->orderColumn, $this->sortOrder)->select('*');
+        //$notes = Note::orderby($this->orderColumn, $this->sortOrder)->select('*');
+        // JOIN TO order category by name
+        $notes = Note::select(
+            'notes.id as id',
+            'categories.name as category_name',
+            'notes.title as title',
+            'notes.user_id as user_id',
+            'notes.pending as pending',
+            'notes.date as date',
+            'notes.rating as rating',
+            'notes.created_at as created_at'
+        )
+            ->join('categories', 'notes.category_id', '=', 'categories.id')
+            ->orderby($this->orderColumn, $this->sortOrder);
+
 
         if (!empty($this->search)) {
             $found = $notes->where('title', "like", "%" . $this->search . "%")->count();

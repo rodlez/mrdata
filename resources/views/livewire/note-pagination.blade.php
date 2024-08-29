@@ -45,14 +45,14 @@
                     <table class="min-w-full rounded-xl">
                       <thead>
                           <tr class="bg-gray-50">
-                              <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize rounded-t-xl" wire:click="sorting('id')">Id {!! $sortLink !!}</th>
+                              <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize rounded-t-xl" wire:click="sorting('notes.id')">Id {!! $sortLink !!}</th>
                               <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize" wire:click="sorting('user_id')">user {!! $sortLink !!}</th>
                               <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize" wire:click="sorting('pending')">pending {!! $sortLink !!}</th>
-                              <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize" wire:click="sorting('category_id')">category {!! $sortLink !!}</th>
+                              <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize" wire:click="sorting('category_name')">category {!! $sortLink !!}</th>
                               <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize" wire:click="sorting('title')">title {!! $sortLink !!}</th>
                               <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize" wire:click="sorting('date')">date {!! $sortLink !!}</th>
                               <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize" wire:click="sorting('rating')">rating {!! $sortLink !!}</th>
-                              <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize" wire:click="sorting('created_at')">created {!! $sortLink !!}</th>
+                              <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize" wire:click="sorting('notes.created_at')">created {!! $sortLink !!}</th>
                               <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize rounded-t-xl"> Actions </th>
                           </tr>
                       </thead>
@@ -63,7 +63,7 @@
                               <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">{{ $note->id }}</td>
                               <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">{{ $note->user_id }}</td>
                               <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">{{ $note->pending }}</td>
-                              <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">{{ $note->category->name }}</td>
+                              <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">{{ $note->category_name }}</td>
                               <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">{{ $note->title }}</td>
                               <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">{{ $note->date }}</td>
                               <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">{{ $note->rating }}</td>                              

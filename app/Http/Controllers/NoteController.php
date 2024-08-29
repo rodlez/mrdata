@@ -24,7 +24,6 @@ class NoteController extends Controller
     public function create()
     {
         $categories = Category::all();
-
         $tags = Tag::all();
 
         return view('note.create', [
@@ -49,18 +48,20 @@ class NoteController extends Controller
             'date' =>  ['nullable', 'date'],
             'date_limit' =>  ['nullable', 'date'],
             'category_id' => ['required']
-
         ]);
+
         // pending boolean
         $request->pending ? $data['pending'] = 1 : $data['pending'] = 0;
         // user_id
         $data['user_id'] = $request->user()->id;
-        // category_id
-        //$data['category_id'] = $request->category;
+        // tags to insert in the pivot table note_tag
+        $tags = $data['tag'];
+        //dd($tags);
 
-        //dd($data);
-
+        // TODO: make a transaction ???
         $note = Note::create($data);
+        // insert tags in the pivot table note_tag
+        $note->tags()->sync($tags);
 
         return to_route('note.index', $note)->with('message', 'Note (' . $note->title . ') created.');
     }
@@ -68,20 +69,91 @@ class NoteController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Note $note) {}
+    public function show(Note $note)
+    {
+
+        //$note = Note::find($note->id);
+
+        $tags = [];
+        foreach ($note->tags as $tag) {
+            $tags[] = $tag->pivot->tag_id;
+        }
+
+        $tagsNames = [];
+        foreach ($tags as $tag) {
+            $tagsNames[] = Tag::find($tag)->name;
+        }
+
+        return view('note.show', [
+            'note' => $note,
+            'tags' => $tags,
+            'tagsNames' => $tagsNames
+        ]);
+    }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Note $note) {}
+    public function edit(Note $note)
+    {
+
+        $categories = Category::all();
+        $tags = Tag::all();
+
+        $tagsSelected = [];
+        foreach ($note->tags as $tag) {
+            $tagsSelected[] = $tag->pivot->tag_id;
+        }
+
+        return view('note.edit', [
+            'note' => $note,
+            'categories' => $categories,
+            'tags' => $tags,
+            'tagsSelected' => $tagsSelected
+        ]);
+    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Note $note) {}
+    public function update(Request $request, Note $note)
+    {
+        $data = $request->validate([
+            'title' => ['required', 'min:3', 'string'],
+            'url' => ['required', 'min:5', 'string'],
+            'info' => ['required', 'min:6', 'string'],
+            'comment' => ['required', 'min:4', 'string'],
+            'tag' => ['required'],
+            'rating' => ['nullable', 'numeric'],
+            'date' =>  ['nullable', 'date'],
+            'date_limit' =>  ['nullable', 'date'],
+            'category_id' => ['required']
+        ]);
+
+        // pending boolean
+        $request->pending ? $data['pending'] = 1 : $data['pending'] = 0;
+        // user_id
+        $data['user_id'] = $request->user()->id;
+        // tags to insert in the pivot table note_tag
+        $tags = $data['tag'];
+        //dd($tags);
+
+        // TODO: make a transaction ???
+        $note->update($data);
+        // insert tags in the pivot table note_tag
+        //$note->tags()->updateExistingPivot($note->id, $tags);
+        $note->tags()->sync($tags);
+
+        return to_route('note.show', $note)->with('message', 'Note (' . $note->title . ') updated.');
+    }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Note $note) {}
+    public function destroy(Note $note)
+    {
+        $note->delete();
+
+        return to_route('note.index')->with('message', 'Note: ' . $note->title . ' deleted.');
+    }
 }
