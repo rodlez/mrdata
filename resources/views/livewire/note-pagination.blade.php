@@ -69,10 +69,15 @@
                               <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">{{ $note->rating }}</td>                              
                               <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">{{ date("d-m-Y", strtotime($note->created_at)) }}</td>                              
                               <td class=" p-5 ">
-                                  <div class="flex items-center gap-1">
+                                  <div class="flex items-center gap-2">
+                                        <a href="{{ route('image.index', $note->id) }}">
+                                            <button class="p-2 rounded-full  group transition-all duration-500  flex item-center">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M0 96C0 60.7 28.7 32 64 32l384 0c35.3 0 64 28.7 64 64l0 320c0 35.3-28.7 64-64 64L64 480c-35.3 0-64-28.7-64-64L0 96zM323.8 202.5c-4.5-6.6-11.9-10.5-19.8-10.5s-15.4 3.9-19.8 10.5l-87 127.6L170.7 297c-4.6-5.7-11.5-9-18.7-9s-14.2 3.3-18.7 9l-64 80c-5.8 7.2-6.9 17.1-2.9 25.4s12.4 13.6 21.6 13.6l96 0 32 0 208 0c8.9 0 17.1-4.9 21.2-12.8s3.6-17.4-1.4-24.7l-120-176zM112 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z"/></svg>                                                                                                                                                   
+                                            </button>
+                                        </a>
                                         <a href="{{ route('note.show', $note) }}">
                                             <button class="p-2 rounded-full  group transition-all duration-500  flex item-center">
-                                                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                                <svg class="cursor-pointer" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path class="fill-green-500" d="M4.998 7.78C6.729 6.345 9.198 5 12 5c2.802 0 5.27 1.345 7.002 2.78a12.713 12.713 0 0 1 2.096 2.183c.253.344.465.682.618.997.14.286.284.658.284 1.04s-.145.754-.284 1.04a6.6 6.6 0 0 1-.618.997 12.712 12.712 0 0 1-2.096 2.183C17.271 17.655 14.802 19 12 19c-2.802 0-5.27-1.345-7.002-2.78a12.712 12.712 0 0 1-2.096-2.183 6.6 6.6 0 0 1-.618-.997C2.144 12.754 2 12.382 2 12s.145-.754.284-1.04c.153-.315.365-.653.618-.997A12.714 12.714 0 0 1 4.998 7.78ZM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clip-rule="evenodd"/>
                                                 </svg>                                                                                                   
                                             </button>
