@@ -14,7 +14,13 @@ class Note extends Model
         'title',
         'url',
         'info',
-        'comment'
+        'comment',
+        'rating',
+        'date',
+        'date_limit',
+        'category_id',
+        'pending',
+        'user_id'
     ];
 
     /**

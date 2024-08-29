@@ -38,16 +38,29 @@ class NoteController extends Controller
      */
     public function store(Request $request)
     {
-
+        //dd($request->pending);
         $data = $request->validate([
             'title' => ['required', 'min:3', 'string'],
             'url' => ['required', 'min:5', 'string'],
             'info' => ['required', 'min:6', 'string'],
-            'comment' => ['required', 'min:4', 'string']
+            'comment' => ['required', 'min:4', 'string'],
+            'tag' => ['required'],
+            'rating' => ['nullable', 'numeric'],
+            'date' =>  ['nullable', 'date'],
+            'date_limit' =>  ['nullable', 'date'],
+            'category_id' => ['required']
+
         ]);
-        dd($data);
-        //$data['user_id'] = $request->user()->id;
-        //$note = Note::create($data);
+        // pending boolean
+        $request->pending ? $data['pending'] = 1 : $data['pending'] = 0;
+        // user_id
+        $data['user_id'] = $request->user()->id;
+        // category_id
+        //$data['category_id'] = $request->category;
+
+        //dd($data);
+
+        $note = Note::create($data);
 
         return to_route('note.index', $note)->with('message', 'Note (' . $note->title . ') created.');
     }

@@ -7,46 +7,98 @@
         
         <form action="{{ route('note.store') }}" method="POST">
             <!-- Add Token to prevent Cross-Site Request Forgery (CSRF) -->
-            @csrf
-                    
+            @csrf                    
                     <!-- Category -->
                     <div class="flex py-4 mr-8">
                         Category
                     </div>
                     <div class="flex py-4 mr-8">
-                        <select name="category" id="category" class="form-control">
+                        <select name="category_id" id="category_id" class="form-control">
                             <?php foreach ($categories as $category) : ?>
-                                <option value="{{$category->id}}">{{$category->name}}</option>
+                                <option value="{{$category->id}}" 
+                                    @if(old('category_id') == $category->id) 
+                                                selected
+                                    @endif  
+                                    >{{$category->name}}</option>
                             <?php endforeach; ?>
                         </select>
                     </div>
+                    @error('category_id')
+                    <div class="text-red-600">{{ $message }}</div>
+                    @enderror
 
                     <!-- Tag -->
                     <div class="flex py-4 mr-8">
                         Tags
                     </div>
-                    <div class="flex py-4 mr-8">
-                        <div class="row">
-                            <?php
-                            $oldTags = [];
-                            if (isset($oldFormData['tag'])) $oldTags = $oldFormData['tag'];
-                            ?>
-                            <?php foreach ($tags as $x => $tag) : ?>
-
-                                <div class="col-lg-3 col-md-4 col-sm-6 px-3">
-                                    <input class="form-check-input" type="checkbox" id="<?php echo $tag->name; ?>" name="tag[]" value="<?php echo $tag->id; ?>" <?php
-                                                                                                                                                                foreach ($oldTags as $oldTag) :
-                                                                                                                                                                    if ((int)$oldTag === (int)$tag->id) :
-                                                                                                                                                                        echo "checked";
-                                                                                                                                                                    endif;
-                                                                                                                                                                endforeach;
-                                                                                                                                                                ?>>
+                    <div class="py-4 mr-8">
+                            
+                            @foreach($tags as $x => $tag)
+                                
+                                    <input class="form-check-input" type="checkbox" id="<?php echo $tag->name; ?>" name="tag[]" value="<?php echo $tag->id; ?>" 
+                                    @if(old('tag'))
+                                        @for($i=0; $i<=count(old('tag')); $i++) 
+                                            @if(old('tag.'.$i) == (int)$tag->id) 
+                                                checked
+                                            @endif                                                                                                                                
+                                        @endfor
+                                    @endif
+                                    >
                                     <label class="form-check-label" for="<?php echo $tag->name; ?>"><?php echo $tag->name; ?></label>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
+                                
+                            @endforeach
                     </div>
-            
+                    @error('tag')
+                    <div class="text-red-600">{{ $message }}</div>
+                    @enderror
+
+                    <!-- pending -->
+                    <div class="flex py-4 mr-8">
+                        Pending
+                    </div>
+                    <div class="flex py-4 mr-8">
+                        <input name="pending" id="pending" type="checkbox" value="true" 
+                            @if(old('pending') == 'true') 
+                                checked
+                            @endif
+                        ></input>
+                    </div>
+                    @error('pending')
+                        <div class="text-red-600">{{ $message }}</div>
+                    @enderror
+                    <!-- rating -->
+                    <div class="flex py-4 mr-8">
+                        <input name="rating" id="rating" step="any" type="number" class="form-control" placeholder="Rating" value="{{ old('rating') }}"></input>
+                    </div>
+                    @error('rating')
+                        <div class="text-red-600">{{ $message }}</div>
+                    @enderror
+
+                    <!-- <input type="date" id="start" name="trip-start" value="2018-07-22" min="2018-01-01" max="2018-12-31" /> -->
+
+
+                    <!-- date -->
+                    <div class="flex py-4 mr-8">
+                        Date
+                    </div>
+                    <div class="flex py-4 mr-8">
+                        <input name="date" id="date" type="date" class="form-control" min="2024-01-01" value="{{ old('date') }}"></input>
+                    </div>
+                    @error('date')
+                        <div class="text-red-600">{{ $message }}</div>
+                    @enderror
+
+                    <!-- date_limit -->
+                    <div class="flex py-4 mr-8">
+                        Date Limit
+                    </div>
+                    <div class="flex py-4 mr-8">
+                        <input name="date_limit" id="date_limit" type="date" class="form-control" min="2024-01-01" value="{{ old('date_limit') }}"></input>
+                    </div>
+                    @error('date_limit')
+                        <div class="text-red-600">{{ $message }}</div>
+                    @enderror
+
                     <!-- title -->
                     <div class="flex py-4 mr-8">
                         <input name="title" id="title" type="text" class="form-control" placeholder="Title" value="{{ old('title') }}"></input>
