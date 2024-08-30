@@ -12,9 +12,9 @@ class NotePagination extends Component
     use WithPagination;
 
     //protected $paginationTheme = "bootstrap";
-    public $orderColumn = "notes.id";
+    public $orderColumn = "id";
     public $sortOrder = "desc";
-    public $sortLink = '<i class="sorticon fa-solid fa-caret-up"></i>';
+    public $sortLink = '<i class="fa-solid fa-circle-chevron-up"></i>';
     public $search = "";
     public $perPage = 10;
 
@@ -34,7 +34,7 @@ class NotePagination extends Component
             $caretOrder = 'up';
         }
 
-        $this->sortLink = '<i class="sorticon fa-solid fa-caret-' . $caretOrder . '"></i>';
+        $this->sortLink = '<i class="fa-solid fa-circle-chevron-' . $caretOrder . '"></i>';
         $this->orderColumn = $columnName;
     }
 
@@ -66,7 +66,8 @@ class NotePagination extends Component
 
         return view('livewire.note-pagination', [
             'notes' => $notes,
-            'found' => $found
+            'found' => $found,
+            'orderColumn' => $this->orderColumn
         ]);
     }
 }

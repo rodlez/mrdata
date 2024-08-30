@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use File;
 // Models
 use App\Models\Note;
 use App\Models\Image;
@@ -35,19 +36,26 @@ class ImageController extends Controller
         $storage_filename = $randomFilename . "." . $fileExtension;
         $media_type = $request->file('image')->getMimeType();
         $size = $request->file('image')->getSize();
+        $path = '/upload/' . $storage_filename;
 
         $data = [
             'note_id' =>  $noteId,
             'original_filename' => $original_filename,
             'storage_filename' => $storage_filename,
+            'path' => $path,
             'media_type' => $media_type,
             'size' =>  $size
         ];
 
+        // using store method
         // store image in the storage/app/uploaded_images folder
-        $path = $request->file('image')->storeAs('upload_images', $storage_filename);
+        //$path = $request->file('image')->storeAs('upload_images', $storage_filename);
 
-        $image = Image::create($data);
+        // using move method to upload in a specific path
+        $request->file('image')->move(public_path('upload'), $storage_filename);
+        //$request->file('image')->move($path);
+
+        Image::create($data);
 
         return to_route('note.show', $note)->with('message', 'Image for (' . $note->title . ') uploaded.');
     }
@@ -55,10 +63,36 @@ class ImageController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Image $image)
+    public function destroy(string $noteId, string $imageId)
     {
-        //$note->delete();
 
-        //return to_route('note.index')->with('message', 'Note: ' . $note->title . ' deleted.');
+        $note = Note::find($noteId);
+        $image = Image::find($imageId);
+
+        $path = public_path('upload/' . $image->storage_filename);
+
+        if (File::exists($path)) {
+            unlink($path);
+            $image->delete();
+        }
+
+        //File::delete(public_path('upload'), $image->storage_filename);
+
+        return to_route('note.show', $note)->with('message', 'Image ' . $image->original_filename . ' for : ' . $note->title . ' deleted.');
+    }
+
+    public function download(string $noteId, string $imageId, string $imageDown)
+    {
+        $note = Note::find($noteId);
+        $image = Image::find($imageId);
+
+        $path = public_path('upload/' . $image->storage_filename);
+
+        // To download we will change the name of the storage filename to his original
+        // by default the browser send HTML files, we need to change the header to tell the browser that we will send a file
+        header("Content-Disposition: {$imageDown};filename={$image->original_filename}");
+        header("Content-Type: {$image->media_type}");
+
+        readfile($path);
     }
 }

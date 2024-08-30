@@ -14,6 +14,7 @@ class Image extends Model
         'note_id',
         'original_filename',
         'storage_filename',
+        'path',
         'media_type',
         'size'
     ];

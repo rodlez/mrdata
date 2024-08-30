@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
+use Illuminate\Support\Facades\Storage;
+
 // Models
 use App\Models\Note;
 use App\Models\Category;
 use App\Models\Tag;
+use App\Models\Image;
 
 class NoteController extends Controller
 {
@@ -73,6 +77,13 @@ class NoteController extends Controller
     {
 
         //$note = Note::find($note->id);
+        $images = Image::where('note_id', $note->id)
+            ->get();
+
+        //dd($images);
+        // test get file url to show
+        //$url = Storage::url('app/avatars/mK9j2LYsoN5FIRIkUASMG3crcaZvaZzTqOV2CqXP.png');
+
 
         $tags = [];
         foreach ($note->tags as $tag) {
@@ -87,7 +98,8 @@ class NoteController extends Controller
         return view('note.show', [
             'note' => $note,
             'tags' => $tags,
-            'tagsNames' => $tagsNames
+            'tagsNames' => $tagsNames,
+            'images' => $images
         ]);
     }
 

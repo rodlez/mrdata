@@ -31,6 +31,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('/note/{id}/image', [ImageController::class, 'index'])->name('image.index')->middleware(['auth', 'verified']);
 Route::post('/note/{id}/image', [ImageController::class, 'store'])->name('image.store')->middleware(['auth', 'verified']);
 Route::delete('/note/{id}/image/{imageId}', [ImageController::class, 'destroy'])->name('image.destroy')->middleware(['auth', 'verified']);
+Route::get('/note/{id}/image/{imageId}/{imageDown}', [ImageController::class, 'download'])->name('image.download')->middleware(['auth', 'verified']);
 
 // CATEGORIES
 Route::middleware(['auth', 'verified'])->group(function () {
