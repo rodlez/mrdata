@@ -5,18 +5,22 @@ namespace App\Http\Controllers;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 
+// Services
+use App\Services\TagService;
+
 class TagController extends Controller
 {
+
+    // Service Injection
+    public function __construct(private TagService $tagService) {}
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $tags = Tag::query()
-            //->where('user_id', request()->user()->id)
-            ->orderBy('id', 'desc')
-            ->paginate(10);
-        return view('tag.index', ['tags' => $tags]);
+        // Use livewire component tag-pagination to display the Tags
+        return view('tag.index');
     }
 
     /**
@@ -32,14 +36,9 @@ class TagController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'name' => ['required', 'min:3', 'string', 'unique:tags,name']
-        ]);
-        //dd($data);
-        //$data['user_id'] = $request->user()->id;
-        $tag = Tag::create($data);
+        $result = $this->tagService->storeTag($request);
 
-        return to_route('tag.index', $tag)->with('message', 'Tag (' . $tag->name . ') created.');
+        return to_route('tag.index')->with($result['status'], $result['message']);
     }
 
     /**
@@ -63,13 +62,10 @@ class TagController extends Controller
      */
     public function update(Request $request, Tag $tag)
     {
-        $data = $request->validate([
-            'name' => ['required', 'min:3', 'string', 'unique:tags,name,{$this->tag->id}']
-        ]);
 
-        $tag->update($data);
+        $result = $this->tagService->updateTag($request, $tag);
 
-        return to_route('tag.show', $tag)->with('message', 'Tag Updated.');
+        return to_route('tag.index')->with($result['status'], $result['message']);
     }
 
     /**
@@ -77,8 +73,8 @@ class TagController extends Controller
      */
     public function destroy(Tag $tag)
     {
-        $tag->delete();
+        $result = $this->tagService->deleteTag($tag);
 
-        return to_route('tag.index')->with('message', 'Tag: ' . $tag->name . ' deleted.');
+        return to_route('tag.index')->with($result['status'], $result['message']);
     }
 }

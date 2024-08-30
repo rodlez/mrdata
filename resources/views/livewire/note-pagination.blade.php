@@ -63,7 +63,7 @@
                               <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">{{ $note->id }}</td>
                               <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">{{ $note->title }}</td>
                               <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">{{ $note->user->name }}</td>
-                              <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 {{ $note->pending === 0 ? 'text-red-400' : 'text-green-400' }}">{{ $note->pending }}</td>
+                              <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 {{ $note->pending === 0 ? 'text-green-400' : 'text-red-400' }}">{{ $note->pending === 0 ? 'No' : 'Yes' }}</td>
                               <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">{{ $note->category_name }}</td>
                               <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">{{ $note->date }}</td>
                               <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 {{ $note->rating < 5 ? 'text-red-400' : 'text-green-400' }}">{{ $note->rating }}</td>                              

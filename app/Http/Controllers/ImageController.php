@@ -7,9 +7,15 @@ use File;
 // Models
 use App\Models\Note;
 use App\Models\Image;
+// Services
+use App\Services\NoteService;
 
 class ImageController extends Controller
 {
+
+    // Service Injection
+    public function __construct(private NoteService $noteService) {}
+
     /**
      * Display a listing of the resource.
      */
@@ -65,16 +71,10 @@ class ImageController extends Controller
      */
     public function destroy(string $noteId, string $imageId)
     {
-
         $note = Note::find($noteId);
         $image = Image::find($imageId);
 
-        $path = public_path('upload/' . $image->storage_filename);
-
-        if (File::exists($path)) {
-            unlink($path);
-            $image->delete();
-        }
+        $this->noteService->deleteOneImage($image);
 
         //File::delete(public_path('upload'), $image->storage_filename);
 

@@ -32,14 +32,28 @@
             @endisset
 
             <!-- Page Content -->           
-            <main>            
-                
-               <!-- Session to pass the message for the CRUD operations -->
+            <main>       
+                <!-- Session to pass the message for the CRUD operations success or error -->
                 @if(session()->has('message'))
-                <div class="success-message">                
-                    {{ session('message') }}
-                    <a href="{{URL::current()}}">X</a>
-                </div>
+                    <div class="bg-green-700 text-white py-2 px-2">                
+                        {{ session('message') }}
+                        <a href="{{URL::current()}}">X</a>
+                    </div>
+                @endif     
+                
+               <!-- Session to pass the message for the CRUD operations success or error -->
+                @if(session()->has('success'))
+                    <div class="bg-green-500 text-white py-2 px-2">                
+                        {{ session('success') }}
+                        <a href="{{URL::current()}}">X</a>
+                    </div>
+                @endif
+
+                @if(session()->has('error'))
+                    <div class="bg-red-500 text-white py-2 px-2">                
+                        {{ session('error') }}
+                        <a href="{{URL::current()}}">X</a>
+                    </div>
                 @endif
                 
                 
