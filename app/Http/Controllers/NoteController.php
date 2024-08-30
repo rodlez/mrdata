@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Storage;
+use File;
 
 // Models
 use App\Models\Note;
@@ -164,6 +165,17 @@ class NoteController extends Controller
      */
     public function destroy(Note $note)
     {
+        $images = Image::where('note_id', $note->id)->get();
+
+        foreach ($images as $image) {
+            $path = public_path('upload/' . $image->storage_filename);
+
+            if (File::exists($path)) {
+                unlink($path);
+                $image->delete();
+            }
+        }
+
         $note->delete();
 
         return to_route('note.index')->with('message', 'Note: ' . $note->title . ' deleted.');
