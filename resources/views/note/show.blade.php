@@ -30,13 +30,16 @@
                 <div>Size - {{$image->size / 1000}} KB</div>
                 <div>
                     @if ($image->media_type === 'application/pdf')
-                        <a href="{{ route('image.download', [$note->id, $image->id, 'inline']) }}">    
+                        <a href="{{ asset('storage/'.$image->storage_filename) }}">    
                             <i class="fa-regular fa-file-pdf fa-2xl"></i>
                         </a>
-                    @else
-                        <a href="{{ route('image.download', [$note->id, $image->id, 'inline']) }}">
-                            <img src="{{$image->path}}" alt="{{$image->original_filename}}" width="250">
-                        </a>                        
+                    @else                            
+                        {{-- <a href="{{ url($image->path)}}">
+                            <img src="{{ url($image->path)}}" alt="{{$image->original_filename}}" width="250">                     
+                        </a> --}}  
+                        <a href="{{ asset('storage/'.$image->storage_filename) }}">            
+                        <img src="{{ asset('storage/'.$image->path) }}" alt="{{$image->original_filename}}" width="250">
+                        </a>
                     @endif                    
                 </div>
                 <div>
@@ -52,7 +55,7 @@
                 </div>
                 <div>
                     <button class="p-2 rounded-full  group transition-all duration-500  flex item-center">
-                        <a href="{{ route('image.download', [$note->id, $image->id, 'attachment']) }}">
+                        <a href="{{ route('image.download', [$note->id, $image->id]) }}">
                             <i class="fa-solid fa-file-arrow-down"></i>
                         </a>
                     </button>

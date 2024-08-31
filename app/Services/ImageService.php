@@ -9,6 +9,8 @@ use App\Models\Note;
 // Request
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreNoteRequest;
+// Files
+use Illuminate\Support\Facades\Storage;
 use File;
 // Collection
 use Illuminate\Database\Eloquent\Collection;
@@ -22,6 +24,91 @@ use stdClass;
 
 class ImageService
 {
+
+    /**
+     * Upload a file and return an array with the info to make the insertion in the DB table Images
+     */
+
+    public function uploadImage(Request $request, Note $note, string $disk): array
+    {
+
+        $original_filename = $request->file('image')->getClientOriginalName();
+        $media_type = $request->file('image')->getMimeType();
+        $size = $request->file('image')->getSize();
+        // Storage in filesystem file config
+        $storage_filename = Storage::disk($disk)->putFile($request->file('image'));
+
+        return [
+            'note_id' =>  $note->id,
+            'original_filename' => $original_filename,
+            'storage_filename' => $storage_filename,
+            //'path' => env('UPLOAD_FILES') . '/' . $storage_filename,
+            'path' => $storage_filename,
+            'media_type' => $media_type,
+            'size' =>  $size
+        ];
+    }
+
+    public function uploadImagePhpOnly(Request $request, Note $note): array
+    {
+
+        $original_filename = $request->file('image')->getClientOriginalName();
+        $randomFilename = bin2hex(random_bytes(16));
+        $fileExtension = $request->file('image')->getClientOriginalExtension();
+        $storage_filename = $randomFilename . "." . $fileExtension;
+        $media_type = $request->file('image')->getMimeType();
+        $size = $request->file('image')->getSize();
+        $path = env('UPLOAD_FILES') . '/' . $storage_filename;
+
+        // using move method to upload in a specific path
+        $request->file('image')->move(public_path('upload'), $storage_filename);
+
+        return [
+            'note_id' =>  $note->id,
+            'original_filename' => $original_filename,
+            'storage_filename' => $storage_filename,
+            'path' => $path,
+            'media_type' => $media_type,
+            'size' =>  $size
+        ];
+    }
+
+    /**
+     * Download an image, disposition inline(browser) or attacment(download)
+     */
+
+    public function downloadImage(Image $image, string $disposition)
+    {
+
+        $dispositionHeader = [
+            'Content-Disposition' => $disposition
+        ];
+
+        if (Storage::disk('public')->exists($image->storage_filename)) {
+            return Storage::disk('public')->download($image->storage_filename, $image->original_filename, $dispositionHeader);
+        } else {
+            die('error');
+            return back();
+        }
+    }
+
+    /**
+     * Upload a file and return an array with the info to make the insertion in the DB table Images
+     */
+
+    public function downloadImagePhpOnly(Image $image)
+    {
+        $disposition = 'attachment';
+        $path = public_path('storage/' . $image->storage_filename);
+
+        // To download we will change the name of the storage filename to his original
+        // by default the browser send HTML files, we need to change the header to tell the browser that we will send a file
+        header("Content-Disposition: {$disposition};filename={$image->original_filename}");
+        header("Content-Type: {$image->media_type}");
+
+        readfile($path);
+    }
+
 
     /**
      * Inset new Note and insert the tags in the intermediate table note_tag   
@@ -38,91 +125,22 @@ class ImageService
      */
     public function deleteOneImage(Image $image)
     {
-        $path = public_path('upload/' . $image->storage_filename);
+        if (Storage::disk('public')->exists($image->storage_filename)) {
+            Storage::disk('public')->delete($image->storage_filename);
+            $image->delete();
+        }
+    }
+
+    /**
+     * Inset new Note and insert the tags in the intermediate table note_tag   
+     */
+    public function deleteOneImagePhpOnly(Image $image)
+    {
+        $path = public_path($image->path);
 
         if (File::exists($path)) {
-            unlink($path);
+            File::delete($path);
             $image->delete();
         }
     }
 }
-
-
-    /* public function storeTag(Request $request): array
-    {
-        $data = $request->validate([
-            'name' => ['required', 'min:3', 'string', 'unique:tags,name']
-        ]);
-
-        try {
-
-            Tag::create($data);
-
-            $result = [
-                'status' => 'success',
-                'message' => 'Tag (' . $request->input('name') . ') created'
-            ];
-        } catch (QueryException $exception) {
-
-            Log::error('Error storing the Tag (' . $request->input('name') . '):' . $exception->getMessage());
-
-            $result = [
-                'status' => 'error',
-                'message'  => 'Tag (' . $request->input('name') . ') could not be created'
-            ];
-        }
-        return $result;
-    }
-
-    public function updateTag(Request $request, Tag $tag): array
-    {
-        $data = $request->validate([
-            'name' => ['required', 'min:3', 'string', 'unique:tags,name']
-        ]);
-
-        try {
-            //$caca = ['truño' => 'grande'];
-            // This way if can Not update, e.g the column does NOT exists, will throw an exception
-            Tag::where('id', $tag->id)->update($data);
-            //$tag->update($data);
-            $result = [
-                'status' => 'success',
-                'message' => 'Tag (' . $request->input('name') . ') updated'
-            ];
-        } catch (Exception $exception) {
-
-            Log::error('Error updating the Tag (' . $request->input('name') . '):' . $exception->getMessage());
-
-            $result = [
-                'status' => 'error',
-                'message'  => 'Tag (' . $request->input('name') . ') could not be updated'
-            ];
-        }
-        return $result;
-    }
-
-    public function deleteTag(Tag $tag): array
-    {
-        $tagDeleted = $tag->name;
-        $caca = new Tag();
-        try {
-
-            $deleted = $caca->delete();
-            dd($deleted);
-
-            $result = [
-                'status' => 'success',
-                'message' => 'Tag (' . $tagDeleted . ') deleted'
-            ];
-        } catch (Exception $exception) {
-
-            Log::error('Error deleting the Tag (' . $tagDeleted . '):' . $exception->getMessage());
-
-            $result = [
-                'status' => 'error',
-                'message'  => 'Tag (' . $tagDeleted . ') could not be deleted'
-            ];
-        }
-
-        return $result;
-    } */
