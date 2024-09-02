@@ -5,13 +5,13 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\Attributes\Validate;
 // Model
-use App\Models\Category;
+use App\Models\Tag;
 use Exception;
 use Illuminate\Http\Request;
 
 use Illuminate\Database\QueryException;
 
-class CreateCategory extends Component
+class CreateTag extends Component
 {
     public $inputs;
 
@@ -38,7 +38,7 @@ class CreateCategory extends Component
     {
         $validated = $this->validate(
             [
-                'inputs.*.name' => 'required|min:3|unique:categories,name|distinct',
+                'inputs.*.name' => 'required|min:3|unique:tags,name|distinct',
             ],
             [
                 'inputs.*.name.required' => 'The name is required',
@@ -53,21 +53,21 @@ class CreateCategory extends Component
 
             try {
 
-                Category::create(['name' => $input['name']]);
+                Tag::create(['name' => $input['name']]);
             } catch (QueryException $exception) {
 
                 $errorInfo = $exception->errorInfo;
 
                 // Return the response to the client..
-                return to_route('category.index')->with('message', 'Error(' . $errorInfo[0] . ') creating the category (' . $input['name'] . ')');
+                return to_route('tag.index')->with('message', 'Error(' . $errorInfo[0] . ') creating the tag (' . $input['name'] . ')');
             }
         }
 
-        return to_route('category.index')->with('message', $this->inputs->count() . ' new Category(es) created');
+        return to_route('tag.index')->with('message', $this->inputs->count() . ' new Tag(s) created');
     }
 
     public function render()
     {
-        return view('livewire.create-category');
+        return view('livewire.create-tag');
     }
 }

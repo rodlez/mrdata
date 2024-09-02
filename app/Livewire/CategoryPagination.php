@@ -8,8 +8,7 @@ use Livewire\WithPagination;
 use App\Models\Category;
 
 
-
-class CatPagination extends Component
+class CategoryPagination extends Component
 {
     use WithPagination;
 
@@ -56,10 +55,9 @@ class CatPagination extends Component
             $found = $categories->where('name', "like", "%" . $this->search . "%")->count();
         }
 
-        //$categories = $categories->paginate(10);
         $categories = $categories->paginate($this->perPage);
 
-        return view('livewire.cat-pagination', [
+        return view('livewire.category-pagination', [
             'categories' => $categories,
             'found' => $found
         ]);

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
+use App\Http\Requests\StoreCategoryRequest;
 use Illuminate\Http\Request;
+
+use App\Models\Category;
 
 class CategoryController extends Controller
 {
@@ -12,14 +14,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //  ->where('user_id', request()->user()->id) to show only the categories for the user
+        // Use livewire component CategoryPagination to display the categories
 
-        $categories = Category::query()
-            //->where('user_id', request()->user()->id)
-            ->orderBy('id', 'desc')
-            ->paginate(10);
-        //dd($categories);
-        return view('category.index', ['categories' => $categories]);
+        return view('category.index');
     }
 
     /**
@@ -35,16 +32,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request);
-        $data = $request->validate([
-            'name' => ['required', 'min:3', 'string', 'unique:categories,name']
-        ]);
-        //dd($data);
-        //$data['user_id'] = $request->user()->id;
-        $category = Category::create($data);
-        //dd($category);
-
-        return to_route('category.index', $category)->with('message', 'Category (' . $category->name . ') created.');
+        // Use livewire component CreateCategory
     }
 
     /**
@@ -76,22 +64,11 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Category $category)
+    public function update(StoreCategoryRequest $request, Category $category)
     {
-        /* resticted access - only user who owns the category has access
-        if ($category->user_id !== request()->user()->id) {
-            abort(403);
-        }*/
-
-        $data = $request->validate([
-            'name' => ['required', 'min:3', 'string', 'unique:categories,name,{$this->category->id}']
-        ]);
-
-        //$data['updated_at'] = date('Y-m-d H:i:s');
-
-        $category->update($data);
-
-        return to_route('category.show', $category)->with('message', 'Category Updated.');
+        $formData = $request->validated();
+        Category::where('id', $category->id)->update($formData);
+        return to_route('category.show', $category)->with('message', 'Category (' . $request->input('name') . ') updated.');
     }
 
     /**

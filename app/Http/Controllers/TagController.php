@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTagRequest;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 
@@ -19,7 +20,7 @@ class TagController extends Controller
      */
     public function index()
     {
-        // Use livewire component tag-pagination to display the Tags
+        // Use livewire component TagPagination to display the Tags
         return view('tag.index');
     }
 
@@ -36,9 +37,7 @@ class TagController extends Controller
      */
     public function store(Request $request)
     {
-        $result = $this->tagService->storeTag($request);
-
-        return to_route('tag.index')->with($result['status'], $result['message']);
+        // Use livewire component CreateTag
     }
 
     /**
@@ -60,12 +59,11 @@ class TagController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Tag $tag)
+    public function update(StoreTagRequest $request, Tag $tag)
     {
-
-        $result = $this->tagService->updateTag($request, $tag);
-
-        return to_route('tag.index')->with($result['status'], $result['message']);
+        $formData = $request->validated();
+        Tag::where('id', $tag->id)->update($formData);
+        return to_route('tag.index')->with('message', 'Tag (' . $request->input('name') . ') updated.');
     }
 
     /**
@@ -73,8 +71,8 @@ class TagController extends Controller
      */
     public function destroy(Tag $tag)
     {
-        $result = $this->tagService->deleteTag($tag);
-
-        return to_route('tag.index')->with($result['status'], $result['message']);
+        $deletedTag = $tag->name;
+        $tag->delete();
+        return to_route('tag.index')->with('message', 'Tag (' . $deletedTag . ') deleted.');
     }
 }

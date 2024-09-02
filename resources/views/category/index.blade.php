@@ -13,7 +13,7 @@
      --}}       
     
 
- <livewire:cat-pagination />
+ <livewire:category-pagination />
     
  
 @push('other-scripts')

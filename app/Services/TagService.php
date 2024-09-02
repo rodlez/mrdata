@@ -18,7 +18,6 @@ use stdClass;
 class TagService
 {
 
-
     public function storeTag(Request $request): array
     {
         $data = $request->validate([

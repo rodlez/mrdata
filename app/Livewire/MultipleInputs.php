@@ -18,7 +18,7 @@ class CreateCategory extends Component
     public function mount()
     {
         $this->fill([
-            'inputs' => collect([['name' => '']])
+            'inputs' => collect([['name' => '', 'email' => '', 'phone' => '']])
         ]);
     }
 
@@ -31,20 +31,24 @@ class CreateCategory extends Component
     public function add()
     {
         //dd($key);
-        $this->inputs->push(['name' => '']);
+        $this->inputs->push(['name' => '', 'email' => '', 'phone' => '']);
     }
 
     public function save()
     {
         $validated = $this->validate(
             [
-                'inputs.*.name' => 'required|min:3|unique:categories,name|distinct',
+                'inputs.*.name' => 'required|min:5|unique:categories,name|distinct',
+                'inputs.*.email' => 'nullable|min:3',
+                'inputs.*.phone' => 'nullable|min:3'
             ],
             [
                 'inputs.*.name.required' => 'The name is required',
-                'inputs.*.name.min' => 'The name at least 3 characters',
+                'inputs.*.name.min' => 'The name at least 5 characters',
                 'inputs.*.name.unique' => 'The name is already created',
-                'inputs.*.name.distinct' => 'The name has a duplicate'
+                'inputs.*.name.distinct' => 'The name has a duplicate',
+                'inputs.*.email.min' => 'Email 3 al menos tete',
+                'inputs.*.phone.min' => 'Phone 3 al menos tete'
             ]
         );
 
@@ -52,18 +56,22 @@ class CreateCategory extends Component
         foreach ($this->inputs as $input) {
 
             try {
-
-                Category::create(['name' => $input['name']]);
+                Category::create(
+                    [
+                        'name' => $input['name']
+                    ]
+                );
             } catch (QueryException $exception) {
-
+                // You can check get the details of the error using `errorInfo`:
                 $errorInfo = $exception->errorInfo;
+                //dd($exception);
 
                 // Return the response to the client..
                 return to_route('category.index')->with('message', 'Error(' . $errorInfo[0] . ') creating the category (' . $input['name'] . ')');
             }
         }
-
-        return to_route('category.index')->with('message', $this->inputs->count() . ' new Category(es) created');
+        //$this->js("alert('categories saved')");
+        return to_route('category.index')->with('message', $this->inputs->count() . ' new Categories created');
     }
 
     public function render()
