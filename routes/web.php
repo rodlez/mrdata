@@ -7,6 +7,9 @@ use App\Http\Controllers\NoteController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\ReminderController;
+
+use App\Http\Controllers\Testini;
 
 Route::get('/', function () {
     return view('welcome');
@@ -74,5 +77,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+// Notifications
+Route::get('/reminder', [ReminderController::class, 'index'])->name('reminder.index');
+
+// Testini
+Route::get('/testini', [Testini::class, 'index'])->name('testini.index');
 
 require __DIR__ . '/auth.php';

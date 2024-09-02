@@ -6,10 +6,13 @@ use Livewire\Component;
 use Livewire\Attributes\Validate;
 // Model
 use App\Models\Tag;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 
 use Illuminate\Database\QueryException;
+
+use App\Notifications\Reminder;
 
 class CreateTag extends Component
 {
@@ -62,6 +65,16 @@ class CreateTag extends Component
                 return to_route('tag.index')->with('message', 'Error(' . $errorInfo[0] . ') creating the tag (' . $input['name'] . ')');
             }
         }
+
+        // test send notification
+
+
+        $user = User::find(1);
+
+        $message["hi"] = "Hey, {$user->name}";
+        $message["wish"] = "You have created a new tag.";
+
+        $user->notify(new Reminder($message));
 
         return to_route('tag.index')->with('message', $this->inputs->count() . ' new Tag(s) created');
     }
