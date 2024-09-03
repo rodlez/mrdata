@@ -66,16 +66,6 @@ class CreateTag extends Component
             }
         }
 
-        // test send notification
-
-
-        $user = User::find(1);
-
-        $message["hi"] = "Hey, {$user->name}";
-        $message["wish"] = "You have created a new tag.";
-
-        $user->notify(new Reminder($message));
-
         return to_route('tag.index')->with('message', $this->inputs->count() . ' new Tag(s) created');
     }
 
