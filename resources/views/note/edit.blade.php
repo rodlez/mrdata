@@ -1,138 +1,163 @@
 <!-- To use the layout.blade.php in views/components as a Template to render in the slot variable -->
-<x-app-layout>    
+<x-app-layout>
     <!-- Full-width fluid until the `md` breakpoint, then lock to container -->
-    <div class="md:container md:mx-auto">
-        <h1 class="text-3xl">Edit new Note</h1>
+    <div class="container mx-auto bg-green-600 pb-8">
 
-        
-        <form action="{{ route('note.update', $note) }}" method="POST">
+        <div class="w-3/4 mx-auto py-4 text-start">
+            <h1 class="text-3xl text-white px-6 pt-4 pb-2">Edit Note</h1>
+        </div>
+
+        <form class="w-3/4 py-4 mx-auto bg-white shadow-lg rounded-md pb-2 mb-2" action="{{ route('note.update', $note) }}" method="POST">
             <!-- Add Token to prevent Cross-Site Request Forgery (CSRF) -->
             @csrf
-             <!-- Dirtective to Override the http method -->
-             @method('PUT')                    
-                    <!-- Category -->
-                    <div class="flex py-4 mr-8">
-                        Category
-                    </div>
-                    <div class="flex py-4 mr-8">
-                        <select name="category_id" id="category_id" class="form-control">
-                            <?php foreach ($categories as $category) : ?>
-                                <option value="{{$category->id}}" 
-                                    @if($note->category_id == $category->id) 
-                                                selected
-                                    @endif  
-                                    >{{$category->name}}</option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    @error('category_id')
-                    <div class="text-red-600">{{ $message }}</div>
+            <!-- Dirtective to Override the http method -->
+            @method('PUT')
+            <!-- title -->
+            <div class="flex flex-wrap mx-4 mb-6">
+                <div class="w-full px-3">
+                    <label class="block uppercase tracking-wide text-black font-bold text-md mb-2" for="title">
+                        Title
+                    </label>
+                    <input class="appearance-none block w-full placeholder-gray-400 bg-gray-100 text-black border-2 border-green-600 rounded py-3 px-4 mb-3 leading-tight focus:ring-0 focus:border-green-800" name="title" id="title" type="text" placeholder="Title" value="{{ $note->title }}"></input>
+                    @error('title')
+                        <p class="text-red-600 text-md italic">{{ $message }}</p>
                     @enderror
-
-                    <!-- Tag -->
-                    <div class="flex py-4 mr-8">
-                        Tags
-                    </div>
-                    <div class="py-4 mr-8">
-                            
-                            @foreach($tags as $x => $tag)
-                                
-                                <input class="form-check-input" type="checkbox" id="<?php echo $tag->name; ?>" name="tag[]" value="<?php echo $tag->id; ?>" 
-                                    @foreach($tagsSelected as $tagSelected)
-                                        @if($tagSelected == $tag->id) 
-                                            checked
-                                        @endif
-                                    @endforeach
-                                >
-                                <label class="form-check-label" for="<?php echo $tag->name; ?>"><?php echo $tag->name; ?></label>
-                                
-                            @endforeach
-                    </div>
-                    @error('tag')
-                    <div class="text-red-600">{{ $message }}</div>
-                    @enderror
-
-                    <!-- pending -->
-                    <div class="flex py-4 mr-8">
+                </div>
+            </div>
+            <!-- date / date limit / pending -->
+            <div class="flex flex-col md:flex-row mx-7 mb-6 gap-6 justify-between items-stretch">
+                <div>
+                    <label class="block uppercase tracking-wide text-black text-md font-bold mb-2" for="pending">
                         Pending
-                    </div>
-                    <div class="flex py-4 mr-8">
-                        <input name="pending" id="pending" type="checkbox" value="true" 
-                            @if($note->pending === 1) 
-                                checked
-                            @endif
-                        ></input>
+                    </label>
+                    <div class="md:text-center py-2">
+                        <input class="appearance-none rounded-sm border-2 border-green-600 text-green-600 focus:ring-green-600 outline-none focus:ring-0 checked:bg-green-500" name="pending" id="pending" type="checkbox" value="true"
+                               @if ($note->pending === 1) checked @endif></input>
                     </div>
                     @error('pending')
-                        <div class="text-red-600">{{ $message }}</div>
+                        <p class="text-red-600 text-md italic">{{ $message }}</p>
                     @enderror
-                    <!-- rating -->
-                    <div class="flex py-4 mr-8">
-                        <input name="rating" id="rating" step="any" type="number" class="form-control" placeholder="Rating" value="{{ $note->rating }}"></input>
-                    </div>
-                    @error('rating')
-                        <div class="text-red-600">{{ $message }}</div>
-                    @enderror
-
-                    <!-- <input type="date" id="start" name="trip-start" value="2018-07-22" min="2018-01-01" max="2018-12-31" /> -->
-
-
-                    <!-- date -->
-                    <div class="flex py-4 mr-8">
+                </div>
+                <div>
+                    <label class="block uppercase tracking-wide text-black text-md font-bold mb-2" for="date">
                         Date
-                    </div>
-                    <div class="flex py-4 mr-8">
-                        <input name="date" id="date" type="date" class="form-control" min="2024-01-01" value="{{ $note->date }}"></input>
-                    </div>
+                    </label>
+                    <input class="appearance-none block w-full placeholder-gray-400 bg-gray-100 text-black border-2 border-green-600 rounded py-3 px-4 mb-3 leading-tight focus:ring-0 focus:border-green-800" name="date" id="date" type="date" min="2024-01-01" value="{{ $note->date }}"></input>
                     @error('date')
-                        <div class="text-red-600">{{ $message }}</div>
+                        <p class="text-red-600 text-md italic">{{ $message }}</p>
                     @enderror
-
-                    <!-- date_limit -->
-                    <div class="flex py-4 mr-8">
+                </div>
+                <div>
+                    <label class="block uppercase tracking-wide text-gray-700 text-md font-bold mb-2" for="date_limit">
                         Date Limit
-                    </div>
-                    <div class="flex py-4 mr-8">
-                        <input name="date_limit" id="date_limit" type="date" class="form-control" min="2024-01-01" value="{{ $note->date_limit }}"></input>
-                    </div>
+                    </label>
+                    <input class="appearance-none block w-full placeholder-gray-400 bg-gray-100 text-black border-2 border-green-600 rounded py-3 px-4 mb-3 leading-tight focus:ring-0 focus:border-green-800" name="date_limit" id="date_limit" type="date" min="2024-01-01" value="{{ $note->date_limit }}"></input>
                     @error('date_limit')
-                        <div class="text-red-600">{{ $message }}</div>
+                        <p class="text-red-600 text-md italic">{{ $message }}</p>
                     @enderror
+                </div>
 
-                    <!-- title -->
-                    <div class="flex py-4 mr-8">
-                        <input name="title" id="title" type="text" class="form-control" placeholder="Title" value="{{ $note->title }}"></input>
-                    </div>
-                    @error('title')
-                        <div class="text-red-600">{{ $message }}</div>
+            </div>
+            <!-- Category -->
+            <div class="flex flex-wrap mx-4 mb-6">
+                <div class="w-full px-3">
+                    <label class="block uppercase tracking-wide text-gray-700 text-md font-bold mb-2" for="category_id">
+                        Category
+                    </label>
+                    <select class="appearance-none block w-full placeholder-gray-400 bg-gray-100 text-black border-2 border-green-600 rounded py-3 px-4 mb-3 leading-tight focus:ring-0 focus:border-green-800" name="category_id" id="category_id">
+                        <?php foreach ($categories as $category) : ?>
+                        <option value="{{ $category->id }}"
+                                @if ($note->category_id == $category->id) selected @endif>{{ $category->name }}</option>
+                        <?php endforeach; ?>
+                    </select>
+                    @error('category_id')
+                        <p class="text-red-600 text-md italic">{{ $message }}</p>
                     @enderror
-                    <!-- url -->
-                    <div class="flex py-4 mr-8">
-                        <input name="url" id="url" type="text" placeholder="Url" value="{{ $note->url }}"></input>
-                    </div>
+                </div>
+            </div>
+
+
+            <!-- Tag -->
+            <div class="flex flex-wrap mx-7 mb-6">
+                <label class="block uppercase tracking-wide text-gray-700 text-md font-bold mb-4" for="category_id">
+                    Tags
+                </label>
+                <ul class="flex flex-wrap justify-start">
+                    @foreach ($tags as $x => $tag)
+                        <li class="inline-flex items-center gap-x-2 py-2 px-1 text-sm font-medium rounded-md bg-gray-200 border-2 border-gray-400 m-1">
+                            <div class="relative flex items-start w-full">
+                                <div class="flex items-center h-5 ">
+                                    <label for="<?php echo $tag->name; ?>" class="mr-2 block text-sm font-normal text-black cursor-pointer "> <?php echo $tag->name; ?> </label>
+                                    <input class="appearance-none rounded-sm text-green-600 outline-none focus:ring-0 checked:bg-green-500" type="checkbox" id="<?php echo $tag->name; ?>" name="tag[]" value="<?php echo $tag->id; ?>"
+                                           @foreach ($tagsSelected as $tagSelected)
+                                    @if ($tagSelected == $tag->id)
+                                checked
+                                @endif @endforeach>
+                                </div>
+                            </div>
+                        </li>
+                    @endforeach
+                </ul>
+                @error('tag')
+                    <p class="text-red-600 text-md italic">{{ $message }}</p>
+                @enderror
+            </div>
+            <!-- rating -->
+            <div class="flex flex-wrap mx-4 mb-6">
+                <div class="w-full px-3">
+                    <label class="block uppercase tracking-wide text-gray-700 text-md font-bold mb-2" for="rating">
+                        rating
+                    </label>
+                    <input class="appearance-none block w-full placeholder-gray-400 bg-gray-100 text-black border-2 border-green-600 rounded py-3 px-4 mb-3 leading-tight focus:ring-0 focus:border-green-800" name="rating" id="rating" step="any" type="number" placeholder="Rating" value="{{ $note->rating }}"></input>
+                    @error('rating')
+                        <p class="text-red-600 text-md italic">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+            <!-- url -->
+            <div class="flex flex-wrap mx-4 mb-6">
+                <div class="w-full px-3">
+                    <label class="block uppercase tracking-wide text-gray-700 text-md font-bold mb-2" for="url">
+                        Url
+                    </label>
+                    <input class="appearance-none block w-full placeholder-gray-400 bg-gray-100 text-black border-2 border-green-600 rounded py-3 px-4 mb-3 leading-tight focus:ring-0 focus:border-green-800" name="url" id="url" type="text" placeholder="http://" value="{{ $note->url }}"></input>
                     @error('url')
-                        <div class="text-red-600">{{ $message }}</div>
+                        <p class="text-red-600 text-md italic">{{ $message }}</p>
                     @enderror
-                    <!-- info -->
-                    <div class="flex py-4 mr-8">
-                        <textarea rows="8" cols="50" name="info" id="info" type="text" class="form-control" placeholder="Info" >{{ $note->info }}</textarea>
-                    </div>
+                </div>
+            </div>
+            <!-- info -->
+            <div class="flex flex-wrap mx-4 mb-6">
+                <div class="w-full px-3">
+                    <label class="block uppercase tracking-wide text-gray-700 text-md font-bold mb-2" for="info">
+                        Info
+                    </label>
+                    <textarea rows="8" cols="50" name="info" id="info" type="text" class="appearance-none block w-full bg-gray-100 text-black border-2 border-green-600 rounded py-3 px-4 mb-3 leading-tight focus:ring-0 focus:border-green-800">{{ $note->info }}</textarea>
                     @error('info')
-                        <div class="text-red-600">{{ $message }}</div>
+                        <p class="text-red-600 text-md italic">{{ $message }}</p>
                     @enderror
-                    <!-- comment -->
-                    <div class="flex py-4 mr-8">
-                        <textarea rows="8" cols="50" name="comment" id="comment" type="text" class="form-control" placeholder="Comment" >{{ $note->comment }}</textarea>
-                    </div>
+                </div>
+            </div>
+            <!-- comment -->
+            <div class="flex flex-wrap mx-4 mb-6">
+                <div class="w-full px-3">
+                    <label class="block uppercase tracking-wide text-gray-700 text-md font-bold mb-2" for="comment">
+                        Comment
+                    </label>
+                    <textarea rows="8" cols="50" name="comment" id="comment" type="text" class="appearance-none block w-full bg-gray-100 text-black border-2 border-green-600 rounded py-3 px-4 mb-3 leading-tight focus:ring-0 focus:border-green-800">{{ $note->comment }}</textarea>
                     @error('comment')
-                        <div class="text-red-600">{{ $message }}</div>
-                    @enderror           
-                    <!-- Buttons -->
-                    <div class="flex items-center gap-4 mt-8">
-                        <button class="text-white bg-green-600 hover:bg-green-500 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Submit</button>
-                    
-                        <a href="{{ route('note.index') }}" class="text-white bg-black hover:bg-slate-800 focus:ring-4 focus:ring-slate-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Back</a>
-                    </div>
+                        <p class="text-red-600 text-md italic">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+            <!-- Buttons -->
+            <div class="flex flex-col mx-7 mb-6 gap-4">
+                <!-- Submit -->
+                <button class="text-white uppercase bg-green-600 hover:bg-green-500 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-lg py-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Submit</button>
+                <!-- Back -->
+                <a href="{{ route('note.index') }}" class="text-white text-center uppercase bg-black hover:bg-slate-800 focus:ring-4 focus:ring-slate-800 font-medium rounded-lg text-lg py-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Back</a>
+
+            </div>
         </form>
     </div>
 </x-app-layout>

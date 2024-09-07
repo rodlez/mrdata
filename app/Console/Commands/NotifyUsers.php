@@ -59,7 +59,7 @@ class NotifyUsers extends Command
             $user->notify(new Reminder($message, $images));
         }
 
-
+        return 0;
         //dd('mire usted');
     }
 }
